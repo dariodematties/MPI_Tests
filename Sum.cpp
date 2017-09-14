@@ -24,9 +24,11 @@
 using namespace std;
 
 // constructor that initializes internal vector elements at random
-Sum::Sum( const std::size_t dimensionality )
+Sum::Sum( const std::size_t dimensionality,
+	  const std::size_t iterations )
 {
 	_dimensionality = dimensionality;
+	_iterations = iterations;
 	_internalVector.resize(_dimensionality);
 
 	for ( std::size_t dim = 0; dim < _dimensionality; dim++ )
@@ -36,10 +38,12 @@ Sum::Sum( const std::size_t dimensionality )
 
 // constructor that initializes internal vector elements from external data 
 Sum::Sum( const std::size_t dimensionality,
-		  const std::vector<double>& vec )
+	  const std::size_t iterations,
+	  const std::vector<double>& vec )
 {
 	assert(dimensionality == vec.size());
 	_dimensionality = dimensionality;
+	_iterations = iterations;
 	_internalVector.resize(_dimensionality);
 
 	for ( std::size_t dim = 0; dim < _dimensionality; dim++ )
@@ -52,10 +56,16 @@ double	Sum::computeSum()
 {
 	double	accumulator = 0.0;
 	#pragma omp parallel for default(none) shared(accumulator)
-	for ( std::size_t dim = 0; dim < _dimensionality; dim++ )		// the index dim corresponds to the internal vector element
-		accumulator += _internalVector[dim];
+	for ( std::size_t it = 0; it < _iterations; it++ ) {
+		double	private_accumulator = 0.0;
+		for ( std::size_t dim = 0; dim < _dimensionality; dim++ ) {		// the index dim corresponds to the internal vector element
+			private_accumulator += _internalVector[dim];
+		}
+		#pragma omp critical
+			accumulator += private_accumulator;
+	}
 
-	return	accumulator;
-} // end function learningRule
+	return	accumulator/(double)_iterations;
+} // end function computeSum
 
 

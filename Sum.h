@@ -27,16 +27,21 @@
 class Sum
 {
 public:
-		Sum( const std::size_t );						// constructor that initializes object of class Sum
+		Sum( const std::size_t,
+		     const std::size_t );						// constructor that initializes object of class Sum
 		
 		Sum( const std::size_t,
+		     const std::size_t,
 		     const std::vector<double>& );					// constructor that initializes object of class Sum
 											// with external values
 
 	double	computeSum();								// function that computes the sum
 
-private:
+protected:
 	std::size_t				_dimensionality;			// flat dimensionality of the internal vector
+	std::size_t				_iterations;				// the number of recalculations of sum
+
+private:
 	std::vector<double>			_internalVector;			// internal vector 
 }; // end class Sum
 
