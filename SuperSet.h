@@ -11,39 +11,39 @@
 //						CCT CONICET Mendoza INCIHUSA					//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// File Name:		Set.h
-// File Description:	Set class definition. This file presents Set's public
-//			interface without revealing the implementations of Set's member functions,
-//			which are defined in Set.cpp.
+// File Name:		SuperSet.h
+// File Description:	SuperSet class definition. This file presents SuperSet's public
+//			interface without revealing the implementations of SuperSet's member functions,
+//			which are defined in SuperSet.cpp.
 
 
 // Class Description: ...
 
-#ifndef SET_H
-#define SET_H
+#ifndef SUPER_SET_H
+#define SUPER_SET_H
 
-#include "Average.h"
+#include "Set.h"
 
-class Set
+class SuperSet
 {
 public:
 
-		Set( const std::size_t,
+		SuperSet( const std::size_t,
 		     const std::size_t,
-		     const std::size_t ); 				// Set constructor, which initializes internal vectors at random
+		     const std::size_t ); 				// SuperSet constructor, which initializes internal vectors at random
 
-		Set( const std::size_t,
+		SuperSet( const std::size_t,
 		     const std::size_t,
 		     const std::size_t,
-		     const std::vector<double>& ); 			// Set constructor, which initializes internal vetors from external data
+		     const std::vector<double>& ); 			// SuperSet constructor, which initializes internal vetors from external data
 
-	double	computeSetAverage();					// computes averages in all the set
+	double	computeSuperSetAverage();					// computes averages in all the set
 	
 private:
-	std::size_t			_numberOfAverages;
-	std::vector<Average>		_averagesVector;
+	std::size_t			_numberOfSets;
+	std::vector<Set>		_setsVector;
 
-}; // end class Set
+}; // end class SuperSet
 
 #endif
 

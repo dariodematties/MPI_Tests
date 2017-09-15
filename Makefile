@@ -1,17 +1,20 @@
-Test: main.o Sum.o Average.o Set.o
-	g++-5 -fopenmp -Wall -pedantic -std=c++14 main.o Sum.o Average.o Set.o -o Test
+Test: main.o Sum.o Average.o Set.o SuperSet.o
+	mpicc -cc=g++-5 -fopenmp -Wall -pedantic -std=c++11 main.o Sum.o Average.o Set.o SuperSet.o -o Test
 
 main.o: main.cpp
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++14 main.cpp
+	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 main.cpp
 
 Sum.o: Sum.cpp Sum.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++14 Sum.cpp
+	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Sum.cpp
 
 Average.o: Average.cpp Average.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++14 Average.cpp
+	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Average.cpp
 
 Set.o: Set.cpp Set.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++14 Set.cpp
+	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Set.cpp
+	
+SuperSet.o: SuperSet.cpp SuperSet.h 
+	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 SuperSet.cpp
 
 clean:
-	rm *.o Test
+	rm -f Test *.o
