@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 		std::size_t	number_of_iterations = std::atoi(argv[2]);
 		std::size_t	number_of_elements = std::atoi(argv[3]);
 		/* initialize random seed: */
-		std::srand(std::time(NULL));
+		std::srand(std::time(NULL)*world_rank);
 		
 		SuperSet	supersetobj(vector_length,number_of_iterations,number_of_elements);
 		auto	average = supersetobj.computeSuperSetAverage();
