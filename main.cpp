@@ -3,6 +3,7 @@
 #include <ctime>       /* time */
 #include <mpi.h>
 
+#include "Timer.h"
 #include "SuperSet.h"				// include definition of class Average
 
 int main(int argc, char* argv[])
@@ -24,12 +25,18 @@ int main(int argc, char* argv[])
 		/* initialize random seed: */
 		std::srand(std::time(NULL)*world_rank);
 		
+
 		SuperSet	supersetobj(vector_length,number_of_iterations,number_of_elements);
+		timer::MarkStartEvent("SuperSet::computeSuperSetAverage");
 		auto	average = supersetobj.computeSuperSetAverage();
+ 		timer::MarkEndEvent("SuperSet::computeSuperSetAverage");
 		if (world_rank == 0)
 			std::cout << "Average is: " << average << "\n";
 
 		MPI_Barrier(MPI_COMM_WORLD);
+
+		// Print time statistics
+		timer::PrintLog(std::cout, MPI_COMM_WORLD);
 		return 0;
 	}
 	else if (argc == 5) {
@@ -42,11 +49,16 @@ int main(int argc, char* argv[])
 		std::vector<double>	vec(vector_length,test_value);
 		
 		SuperSet	supersetobj(vector_length,number_of_iterations,number_of_elements,vec);
+		timer::MarkStartEvent("SuperSet::computeSuperSetAverage");
 		auto	average = supersetobj.computeSuperSetAverage();
+ 		timer::MarkEndEvent("SuperSet::computeSuperSetAverage");
 		if (world_rank == 0)
 			std::cout << "Average is: " << average << "\n";
 
 		MPI_Barrier(MPI_COMM_WORLD);
+		
+		// Print time statistics
+		timer::PrintLog(std::cout, MPI_COMM_WORLD);
 		return 0;
 	}
 	else {

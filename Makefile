@@ -1,5 +1,5 @@
-Test: main.o Sum.o Average.o Set.o SuperSet.o
-	mpicc -cc=g++-5 -fopenmp -Wall -pedantic -std=c++11 main.o Sum.o Average.o Set.o SuperSet.o -o Test
+Test: main.o Sum.o Average.o Set.o SuperSet.o Timer.o
+	mpicc -cc=g++-5 -fopenmp -Wall -pedantic -std=c++11 main.o Sum.o Average.o Set.o SuperSet.o Timer.o -o Test
 
 main.o: main.cpp
 	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 main.cpp
@@ -15,6 +15,9 @@ Set.o: Set.cpp Set.h
 	
 SuperSet.o: SuperSet.cpp SuperSet.h 
 	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 SuperSet.cpp
+
+Timer.o: Timer.cxx Timer.h TimerC.h
+	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Timer.cxx
 
 clean:
 	rm -f Test *.o
