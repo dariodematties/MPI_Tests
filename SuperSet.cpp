@@ -19,6 +19,7 @@
 #include <omp.h>
 #include <cassert>
 
+#include "Timer.h"
 #include "SuperSet.h"
 
 using namespace std;
@@ -79,42 +80,40 @@ SuperSet::SuperSet( const std::size_t dimensionality,
 // computes the averages in SuperSet
 double	SuperSet::computeSuperSetAverage()
 {
-	double	output = 0.0;
-	#pragma omp parallel for default(none) shared(output)
+	double	local_sum = 0.0, output;
+
+	timer::MarkStartEvent("SuperSet::computeSuperSetAverage  computation");
+	#pragma omp parallel for default(none) shared(local_sum)
 	for ( std::size_t element = 0; element < _setsVector.size(); element++ ) {
 		auto	partial = _setsVector[element].computeSetAverage();	
 		#pragma omp critical
-			output += partial;
+			local_sum += partial;
 	}
 
-	output = output/(double)_setsVector.size();
+	local_sum = local_sum/(double)_setsVector.size();
+ 	timer::MarkEndEvent("SuperSet::computeSuperSetAverage  computation");
 
 	// Begin Inter-process comunication
 	//
+	timer::MarkStartEvent("SuperSet::computeSuperSetAverage Inter-process comunication");
 	int	auxiliary;
+	double	global_sum = 0.0;
+
 	// Get the number of processes
 	MPI_Comm_size(MPI_COMM_WORLD, &auxiliary);
 	std::size_t	world_size = auxiliary;
 
-	// Get the rank of the process
-	MPI_Comm_rank(MPI_COMM_WORLD, &auxiliary);
-	std::size_t	world_rank = auxiliary;
+	// Reduce all of the local sums into the global sum
+	MPI_Reduce(&local_sum, &global_sum, 1, MPI_DOUBLE, MPI_SUM, 0,
+		   MPI_COMM_WORLD);
 
-	if (world_rank != 0) { // Any process has to send its computation to process 0
-		MPI_Send(&output, 1, MPI_DOUBLE, 0, 0, MPI_COMM_WORLD);
-	}
-       	else { // Process 0 receives all processes computations
-		for ( std::size_t process = 1; process < world_size; process++ ) {
-			double	number;
-			MPI_Recv(&number, 1, MPI_DOUBLE, process, 0, MPI_COMM_WORLD,
-				 MPI_STATUS_IGNORE);
-			output+=number;
-		}
-		output = output/(double)world_size;
-	}
+	output = global_sum/(double)world_size;
+
+ 	timer::MarkEndEvent("SuperSet::computeSuperSetAverage Inter-process comunication");
 	//
 	// End Inter-process comunication
 	
+	MPI_Barrier(MPI_COMM_WORLD);
 	return	output;
 } // end function computeSuperSetAverage
 
