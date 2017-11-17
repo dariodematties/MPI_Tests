@@ -1,23 +1,33 @@
+# Set the compilers you want to use
+
+# Use g++-5 gcc version 4.8.5 (Ubuntu 4.8.5-2ubuntu1~14.04.1)
+CC = g++-5
+# Use mpicc mpicc for MPICH version 3.2
+MPI = mpicc
+
+# Use the following Compile-time flags
+CFLAGS = -fopenmp -Wall -pedantic -std=c++11
+
 Test: main.o Sum.o Average.o Set.o SuperSet.o Timer.o
-	mpicc -cc=g++-5 -fopenmp -Wall -pedantic -std=c++11 main.o Sum.o Average.o Set.o SuperSet.o Timer.o -o Test
+	$(MPI) -cc=$(CC) $(CFLAGS) main.o Sum.o Average.o Set.o SuperSet.o Timer.o -o Test
 
 main.o: main.cpp
-	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 main.cpp
+	$(MPI) -cc=$(CC) -c $(CFLAGS) main.cpp
 
 Sum.o: Sum.cpp Sum.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Sum.cpp
+	$(CC) -c $(CFLAGS) Sum.cpp
 
 Average.o: Average.cpp Average.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Average.cpp
+	$(CC) -c $(CFLAGS) Average.cpp
 
 Set.o: Set.cpp Set.h 
-	g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Set.cpp
+	$(CC) -c $(CFLAGS) Set.cpp
 	
 SuperSet.o: SuperSet.cpp SuperSet.h 
-	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 SuperSet.cpp
+	$(MPI) -cc=$(CC) -c $(CFLAGS) SuperSet.cpp
 
 Timer.o: Timer.cxx Timer.h TimerC.h
-	mpicc -cc=g++-5 -c -fopenmp -Wall -pedantic -std=c++11 Timer.cxx
+	$(MPI) -cc=$(CC) -c $(CFLAGS) Timer.cxx
 
 clean:
 	rm -f Test *.o
