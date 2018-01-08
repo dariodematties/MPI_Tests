@@ -37,3 +37,7 @@ Test
 # swp files
 *.swp
 
+# *.cobaltlog *.error *.output
+*.cobaltlog
+*.error
+*.output
