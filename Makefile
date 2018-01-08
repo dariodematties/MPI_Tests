@@ -1,15 +1,25 @@
 # Set the compilers you want to use
 
 # Use g++-5 gcc version 4.8.5 (Ubuntu 4.8.5-2ubuntu1~14.04.1)
-CC = g++-5
+CC = g++
+
+# Use Intel C++ compiler
+#CC = icpc
+
+
 # Use mpicc mpicc for MPICH version 3.2
 MPI = mpicc
 
+# Use mpiicc if you us Intel compilers
+#MPI = mpiicc
+
+
 # Use the following Compile-time flags
-CFLAGS = -fopenmp -Wall -pedantic -std=c++11
+CFLAGS = -O3 -fopenmp -Wall -pedantic -std=c++11
 
 Test: main.o Sum.o Average.o Set.o SuperSet.o Timer.o
-	$(MPI) -cc=$(CC) $(CFLAGS) main.o Sum.o Average.o Set.o SuperSet.o Timer.o -o Test
+	$(MPI) -cc=$(CC) $(CFLAGS) main.o Sum.o Average.o\
+					  Set.o SuperSet.o Timer.o -o Test
 
 main.o: main.cpp
 	$(MPI) -cc=$(CC) -c $(CFLAGS) main.cpp
